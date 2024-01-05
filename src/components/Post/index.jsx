@@ -8,7 +8,6 @@ import CommentIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 
 import styles from './Post.module.scss';
 import { UserInfo } from '../UserInfo';
-import { PostSkeleton } from './Skeleton';
 
 export const Post = ({
   _id,
@@ -21,12 +20,8 @@ export const Post = ({
   tags,
   children,
   isFullPost,
-  isLoading,
   isEditable,
 }) => {
-  if (isLoading) {
-    return <PostSkeleton />;
-  }
 
   const onClickRemove = () => {};
 
