@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Grid from '@mui/material/Grid';
@@ -9,30 +9,55 @@ import { CommentsBlock } from '../components/CommentsBlock';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPosts } from '../redux/slices/postsSlice';
 import { PostSkeleton } from '../components/Post/Skeleton';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export const Home = () => {
+  const location = useLocation();
   const { posts, isLoading } = useSelector((state) => state.posts)
+  const queryParams = new URLSearchParams(location.search);
+  const sortBy = queryParams.get('sortby') ?? 'date';
+
+  const navigate = useNavigate()
+
+  const tabs = [
+    { label: 'Новые', value: 'date' },
+    { label: 'Популярные', value: 'popular' },
+  ];
+  const initialActiveTab = tabs.findIndex(tab => tab.value === sortBy);
+
+  const [activeTab, setActiveTab] = useState(initialActiveTab);
+
+  const handleTabChange = (sortBy, index)=>{
+    setActiveTab(index)
+    const tabPath = index === 0 ? 'date' : 'popular';
+    navigate(`?sortby=${tabPath}`);
+    dispatch(fetchPosts(sortBy))
+  }
+
+
   const dispatch = useDispatch()
+
   useEffect(() => {
-    dispatch(fetchPosts())
-  }, [])
-  console.log(posts);
+    dispatch(fetchPosts(sortBy || 'date'))
+  }, [sortBy])
 
   return (
     <>
-      <Tabs style={{ marginBottom: 15 }} value={0} aria-label="basic tabs example">
-        <Tab label="Новые" />
-        <Tab label="Популярные" />
+      <Tabs style={{ marginBottom: 15 }} value={activeTab} aria-label="basic tabs example">
+        {tabs.map((tab, index) => (
+          <Tab key={index} onClick={() => handleTabChange(tab.value, index)} label={tab.label} />
+        ))}
       </Tabs>
       <Grid container spacing={4}>
         <Grid xs={8} item>
           {isLoading ? (
-            [...Array(5)].map(() => (
-              <PostSkeleton />
+            [...Array(5)].map((_,index) => (
+              <PostSkeleton key={index} />
             ))
           ) : (
             posts.map((post) => (
               <Post
+                key={post._id}
                 id={post._id}
                 title={post.title}
                 imageUrl={post.imageUrl}

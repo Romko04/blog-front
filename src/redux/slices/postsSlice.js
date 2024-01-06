@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { PayloadAction } from '@reduxjs/toolkit'
-import axios from '../../axios/axiosConfig';
+import axios, { getPostsApi } from '../../axios/axiosConfig';
 
 export const fetchPosts = createAsyncThunk(
     'posts',
-    async () => {
-        const response = await axios('/posts', )
+    async (sortBy) => {
+        const response = await getPostsApi(sortBy)
         return response.data
     }
 )
