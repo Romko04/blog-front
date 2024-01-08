@@ -6,4 +6,12 @@ const instance = axios.create({
 
 export const getPostsApi = (sortBy) => instance.get(`/posts?sortby=${sortBy}`);
 export const registerApi = (data) => instance.post(`/auth/register`,data);
+export const loginApi = (data) => instance.post(`/auth/login`,data);
+export const authMeApi = (token) => instance.get(`/auth/me`, {
+  headers: {
+    Authorization: `Bearer ${token}`
+  }
+});
+
+
 

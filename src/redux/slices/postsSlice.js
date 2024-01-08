@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { PayloadAction } from '@reduxjs/toolkit'
-import axios, { getPostsApi } from '../../axios/axiosConfig';
+import { getPostsApi } from '../../axios/axiosConfig';
 
 export const fetchPosts = createAsyncThunk(
     'posts',
@@ -24,7 +23,7 @@ export const postsSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(fetchPosts.pending, (state, action) => {
             state.isLoading = true
-            state.posts = []
+            state.posts = action.payload
         })
         builder.addCase(fetchPosts.fulfilled, (state, action) => {
             state.isLoading = false
@@ -34,6 +33,6 @@ export const postsSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { } = postsSlice.actions
+// export const { } = postsSlice.actions
 
 export default postsSlice.reducer

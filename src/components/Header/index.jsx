@@ -1,15 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Button from '@mui/material/Button';
 
 import styles from './Header.module.scss';
 import Container from '@mui/material/Container';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { fetchAuthMe, logoutUser } from '../../redux/slices/userSlice';
 
 export const Header = () => {
-  const {isAuth} = useSelector((state)=>state.user);
+  const dispatch = useDispatch()
 
-  const onClickLogout = () => {};
+  useEffect(() => {
+    const cookie = Cookies.get('auth_token') // => 'value'
+    if (cookie) {
+      dispatch(fetchAuthMe(cookie))
+    }
+  }, [])
+  const { isAuth } = useSelector((state) => state.user);
+
+  const onClickLogout = () => { 
+    dispatch(logoutUser())
+  };
 
   return (
     <div className={styles.root}>

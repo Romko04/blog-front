@@ -18,11 +18,11 @@ export const Registration = () => {
 
   const {isAuth} = useSelector((state)=>state.user)
   
-  const { register, handleSubmit, formState: { errors, isValid } } = useForm({
+  const { register, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
-      email: '',
-      username: '',
-      password: ''
+      email: 'kurpelroma@gmail.com',
+      username: 'kurpel',
+      password: 'kurpelroma@gmail'
     },
   })
 
